@@ -12,7 +12,7 @@
 
 <meta name="author" content="Bernhard Meindl" />
 
-<meta name="date" content="2023-03-10" />
+<meta name="date" content="2023-03-14" />
 
 <title>Introduction to the cellKey-Package</title>
 
@@ -121,20 +121,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    var j = 0;
-    while (j < rules.length) {
+    for (var j = 0; j < rules.length; j++) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
-        j++;
-        continue;
-      }
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') {
-        j++;
-        continue;
-      }
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -340,7 +333,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Introduction to the cellKey-Package</h1>
 <h4 class="author">Bernhard Meindl</h4>
-<h4 class="date">2023-03-10</h4>
+<h4 class="date">2023-03-14</h4>
 
 
 
@@ -354,7 +347,7 @@ Statistics</em> (Thompson, Broadfoot, Elazar). This approach however was
 generalized and a new specification on how record keys are specified and
 the lookup-tables are defined is used. This package makes usage of
 perturbation tables that can be defined in the <a href="https://github.com/sdcTools/ptable"><strong>ptable</strong></a>
-package. This document describes the usage of version <code>1.0.0</code>
+package. This document describes the usage of version <code>1.0.1</code>
 of the package.</p>
 </div>
 <div id="main-features" class="section level2">
@@ -391,7 +384,7 @@ by running an example that</p>
 <h3>Load the Package</h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cellKey)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;cellKey&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &#39;1.0.0&#39;</code></pre>
+<pre><code>## [1] &#39;1.0.1&#39;</code></pre>
 <p>The first step in this approach is to generate a statistical table,
 which can be achieved using <code>ck_setup</code>. This function
 generates an object that contains all the information required to
@@ -439,12 +432,12 @@ shown below:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>rkeys <span class="ot">&lt;-</span> <span class="fu">ck_generate_rkeys</span>(<span class="at">dat =</span> dat, <span class="at">nr_digits =</span> <span class="dv">7</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(dat))</span></code></pre></div>
 <pre><code>##       sex        age savings income sampling_weight cnt_highincome     rkeys
-## 1:   male age_group3      12   5780              99              0 0.6278257
-## 2: female age_group3      28   2530              80              0 0.5779098
-## 3:   male age_group1     550   6920              68              0 0.0455409
-## 4:   male age_group1     870   7960              98              0 0.5637732
-## 5:   male age_group4      20   9030              69              1 0.8930465
-## 6: female age_group3     102   3290              88              0 0.9764589</code></pre>
+## 1:   male age_group3      12   5780              73              0 0.2950739
+## 2: female age_group3      28   2530              79              0 0.7292723
+## 3:   male age_group1     550   6920              65              0 0.8703902
+## 4:   male age_group1     870   7960              71              0 0.0186415
+## 5:   male age_group4      20   9030              73              1 0.1632818
+## 6: female age_group3     102   3290              47              0 0.3279514</code></pre>
 <p>To ensure that the same record keys are computed each and every time
 for the same data set, a seed based on the sha1-hash of the input
 dataset is computed by default in <code>ck_generate_rkeys</code>. This
@@ -822,47 +815,47 @@ columns:</p>
 </ul>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>tab<span class="sc">$</span><span class="fu">freqtab</span>(<span class="at">v =</span> <span class="fu">c</span>(<span class="st">&quot;total&quot;</span>, <span class="st">&quot;cnt_highincome&quot;</span>))</span></code></pre></div>
 <pre><code>##        sex        age          vname  uwc     wc puwc         pwc
-##  1:  Total      Total          total 4580 274237 4580 274237.0000
-##  2:  Total age_group1          total 1969 117458 1968 117398.3464
-##  3:  Total age_group2          total 1143  67825 1144  67884.3395
-##  4:  Total age_group3          total  864  52688  863  52627.0185
-##  5:  Total age_group4          total  423  25022  424  25081.1537
-##  6:  Total age_group5          total  168  10483  168  10483.0000
-##  7:  Total age_group6          total   13    761   11    643.9231
-##  8:   male      Total          total 2296 138349 2295 138288.7435
-##  9:   male age_group1          total 1015  61295 1016  61355.3892
-## 10:   male age_group2          total  571  33753  571  33753.0000
-## 11:   male age_group3          total  424  26312  423  26249.9434
-## 12:   male age_group4          total  195  11538  194  11478.8308
-## 13:   male age_group5          total   84   5064   84   5064.0000
-## 14:   male age_group6          total    7    387    8    442.2857
-## 15: female      Total          total 2284 135888 2283 135828.5044
-## 16: female age_group1          total  954  56163  954  56163.0000
-## 17: female age_group2          total  572  34072  572  34072.0000
-## 18: female age_group3          total  440  26376  438  26256.1091
-## 19: female age_group4          total  228  13484  228  13484.0000
-## 20: female age_group5          total   84   5419   85   5483.5119
-## 21: female age_group6          total    6    374    5    311.6667
-## 22:  Total      Total cnt_highincome  445  27069  447  27190.6584
-## 23:  Total age_group1 cnt_highincome  192  11255  192  11255.0000
-## 24:  Total age_group2 cnt_highincome  123   7609  127   7856.4472
-## 25:  Total age_group3 cnt_highincome   82   5081   82   5081.0000
-## 26:  Total age_group4 cnt_highincome   34   2258   31   2058.7647
-## 27:  Total age_group5 cnt_highincome   14    866   15    927.8571
+##  1:  Total      Total          total 4580 273469 4580 273469.0000
+##  2:  Total age_group1          total 1969 118811 1970 118871.3408
+##  3:  Total age_group2          total 1143  67524 1144  67583.0761
+##  4:  Total age_group3          total  864  51382  863  51322.5301
+##  5:  Total age_group4          total  423  25089  425  25207.6241
+##  6:  Total age_group5          total  168   9900  169   9958.9286
+##  7:  Total age_group6          total   13    763   14    821.6923
+##  8:   male      Total          total 2296 138009 2296 138009.0000
+##  9:   male age_group1          total 1015  62153 1015  62153.0000
+## 10:   male age_group2          total  571  33902  570  33842.6270
+## 11:   male age_group3          total  424  24995  423  24936.0495
+## 12:   male age_group4          total  195  11630  196  11689.6410
+## 13:   male age_group5          total   84   4913   85   4971.4881
+## 14:   male age_group6          total    7    416    9    534.8571
+## 15: female      Total          total 2284 135460 2286 135578.6165
+## 16: female age_group1          total  954  56658  954  56658.0000
+## 17: female age_group2          total  572  33622  573  33680.7797
+## 18: female age_group3          total  440  26387  441  26446.9705
+## 19: female age_group4          total  228  13459  227  13399.9693
+## 20: female age_group5          total   84   4987   85   5046.3690
+## 21: female age_group6          total    6    347    8    462.6667
+## 22:  Total      Total cnt_highincome  445  26573  445  26573.0000
+## 23:  Total age_group1 cnt_highincome  192  11818  191  11756.4479
+## 24:  Total age_group2 cnt_highincome  123   7009  122   6952.0163
+## 25:  Total age_group3 cnt_highincome   82   5123   82   5123.0000
+## 26:  Total age_group4 cnt_highincome   34   1942   32   1827.7647
+## 27:  Total age_group5 cnt_highincome   14    681   14    681.0000
 ## 28:  Total age_group6 cnt_highincome    0      0    0      0.0000
-## 29:   male      Total cnt_highincome  219  13610  219  13610.0000
-## 30:   male age_group1 cnt_highincome   90   5457   89   5396.3667
-## 31:   male age_group2 cnt_highincome   66   4229   66   4229.0000
-## 32:   male age_group3 cnt_highincome   41   2611   41   2611.0000
-## 33:   male age_group4 cnt_highincome   15    963   13    834.6000
-## 34:   male age_group5 cnt_highincome    7    350    7    350.0000
+## 29:   male      Total cnt_highincome  219  13064  219  13064.0000
+## 30:   male age_group1 cnt_highincome   90   5630   92   5755.1111
+## 31:   male age_group2 cnt_highincome   66   3943   66   3943.0000
+## 32:   male age_group3 cnt_highincome   41   2407   41   2407.0000
+## 33:   male age_group4 cnt_highincome   15    779   15    779.0000
+## 34:   male age_group5 cnt_highincome    7    305    3    130.7143
 ## 35:   male age_group6 cnt_highincome    0      0    0      0.0000
-## 36: female      Total cnt_highincome  226  13459  226  13459.0000
-## 37: female age_group1 cnt_highincome  102   5798  101   5741.1569
-## 38: female age_group2 cnt_highincome   57   3380   57   3380.0000
-## 39: female age_group3 cnt_highincome   41   2470   41   2470.0000
-## 40: female age_group4 cnt_highincome   19   1295   22   1499.4737
-## 41: female age_group5 cnt_highincome    7    516    7    516.0000
+## 36: female      Total cnt_highincome  226  13509  225  13449.2257
+## 37: female age_group1 cnt_highincome  102   6188  102   6188.0000
+## 38: female age_group2 cnt_highincome   57   3066   58   3119.7895
+## 39: female age_group3 cnt_highincome   41   2716   37   2451.0244
+## 40: female age_group4 cnt_highincome   19   1163   19   1163.0000
+## 41: female age_group5 cnt_highincome    7    376    7    376.0000
 ## 42: female age_group6 cnt_highincome    0      0    0      0.0000
 ##        sex        age          vname  uwc     wc puwc         pwc</code></pre>
 </div>
@@ -885,48 +878,48 @@ and the following additional columns:</p>
 perturbed.</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>tab<span class="sc">$</span><span class="fu">numtab</span>(<span class="at">v =</span> <span class="fu">c</span>(<span class="st">&quot;savings&quot;</span>, <span class="st">&quot;income&quot;</span>))</span></code></pre></div>
 <pre><code>##        sex        age   vname      uws         ws          pws
-##  1:  Total      Total savings  2273532  136170447  136173843.1
-##  2:  Total age_group1 savings   982386   58442508   58448803.0
-##  3:  Total age_group2 savings   552336   32563281   32561910.1
-##  4:  Total age_group3 savings   437101   26605134   26614735.9
-##  5:  Total age_group4 savings   214661   12960961   12963684.0
-##  6:  Total age_group5 savings    80451    5205377    5203819.5
-##  7:  Total age_group6 savings     6597     393186     386674.0
-##  8:   male      Total savings  1159816   69853100   69855211.2
-##  9:   male age_group1 savings   517660   31084464   31090585.8
-## 10:   male age_group2 savings   280923   16450477   16454439.8
-## 11:   male age_group3 savings   214970   13274983   13281374.2
-## 12:   male age_group4 savings    99420    6147416    6143482.0
-## 13:   male age_group5 savings    43233    2674894    2677686.0
-## 14:   male age_group6 savings     3610     220866     219237.3
-## 15: female      Total savings  1113716   66317347   66309167.0
-## 16: female age_group1 savings   464726   27358044   27352666.2
-## 17: female age_group2 savings   271413   16112804   16114738.4
-## 18: female age_group3 savings   222131   13330151   13326818.5
-## 19: female age_group4 savings   115241    6813545    6813337.9
-## 20: female age_group5 savings    37218    2530483    2530421.2
-## 21: female age_group6 savings     2987     172320     172115.2
-## 22:  Total      Total  income 22952978 1372531159 1372562394.8
-## 23:  Total age_group1  income  9810547  583385782  583439989.1
-## 24:  Total age_group2  income  5692119  339883540  339863756.2
-## 25:  Total age_group3  income  4406946  267407882  267489603.4
-## 26:  Total age_group4  income  2133543  124903566  124952624.2
-## 27:  Total age_group5  income   848151   53297550   53277370.7
-## 28:  Total age_group6  income    61672    3652839    3560784.8
-## 29:   male      Total  income 11262049  679518216  679536671.7
-## 30:   male age_group1  income  4877164  294032335  294056625.4
-## 31:   male age_group2  income  2811379  167614619  167662763.8
-## 32:   male age_group3  income  2168169  134600127  134649749.8
-## 33:   male age_group4  income   978510   57622860   57519554.9
-## 34:   male age_group5  income   393134   23639144   23669082.2
-## 35:   male age_group6  income    33693    2009131    1994026.5
-## 36: female      Total  income 11690929  693012943  692882453.8
-## 37: female age_group1  income  4933383  289353447  289288097.0
-## 38: female age_group2  income  2880740  172268921  172293631.1
-## 39: female age_group3  income  2238777  132807755  132777518.5
-## 40: female age_group4  income  1155033   67280706   67268674.1
-## 41: female age_group5  income   455017   29658406   29655554.7
-## 42: female age_group6  income    27979    1643708    1680270.2
+##  1:  Total      Total savings  2273532  135079123  135079422.0
+##  2:  Total age_group1 savings   982386   58764827   58766266.1
+##  3:  Total age_group2 savings   552336   32673608   32679482.0
+##  4:  Total age_group3 savings   437101   26016038   26015247.0
+##  5:  Total age_group4 savings   214661   12612707   12611913.0
+##  6:  Total age_group5 savings    80451    4642388    4639591.7
+##  7:  Total age_group6 savings     6597     369555     368455.0
+##  8:   male      Total savings  1159816   69086078   69096872.0
+##  9:   male age_group1 savings   517660   31335190   31335482.1
+## 10:   male age_group2 savings   280923   16596868   16601262.4
+## 11:   male age_group3 savings   214970   12554652   12550994.9
+## 12:   male age_group4 savings    99420    5924288    5923136.9
+## 13:   male age_group5 savings    43233    2493233    2501892.7
+## 14:   male age_group6 savings     3610     181847     183213.5
+## 15: female      Total savings  1113716   65993045   65994267.5
+## 16: female age_group1 savings   464726   27429637   27427923.1
+## 17: female age_group2 savings   271413   16076740   16074521.2
+## 18: female age_group3 savings   222131   13461386   13457489.1
+## 19: female age_group4 savings   115241    6688419    6686256.0
+## 20: female age_group5 savings    37218    2149155    2144932.1
+## 21: female age_group6 savings     2987     187708     186174.7
+## 22:  Total      Total  income 22952978 1364767269 1364769367.8
+## 23:  Total age_group1  income  9810547  591758238  591738536.0
+## 24:  Total age_group2  income  5692119  333718917  333763505.5
+## 25:  Total age_group3  income  4406946  263978951  263970096.3
+## 26:  Total age_group4  income  2133543  123336684  123336633.1
+## 27:  Total age_group5  income   848151   48196290   48193988.7
+## 28:  Total age_group6  income    61672    3778189    3727233.6
+## 29:   male      Total  income 11262049  677201419  677296618.9
+## 30:   male age_group1  income  4877164  299869922  299896254.5
+## 31:   male age_group2  income  2811379  166131121  166185240.9
+## 32:   male age_group3  income  2168169  129362397  129333953.7
+## 33:   male age_group4  income   978510   57426776   57419278.8
+## 34:   male age_group5  income   393134   22241812   22275805.2
+## 35:   male age_group6  income    33693    2169391    2240250.7
+## 36: female      Total  income 11690929  687565850  687589260.3
+## 37: female age_group1  income  4933383  291888316  291886431.6
+## 38: female age_group2  income  2880740  167587796  167596798.5
+## 39: female age_group3  income  2238777  134616554  134563137.3
+## 40: female age_group4  income  1155033   65909908   65902443.4
+## 41: female age_group5  income   455017   25954478   25899529.6
+## 42: female age_group6  income    27979    1608798    1637977.3
 ##        sex        age   vname      uws         ws          pws</code></pre>
 </div>
 </div>
@@ -940,52 +933,52 @@ simple as:</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>tab<span class="sc">$</span><span class="fu">measures_cnts</span>(<span class="at">v =</span> <span class="st">&quot;total&quot;</span>, <span class="at">exclude_zeros =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>## $overview
 ##    noise cnt       pct
-## 1:    -1   5 0.2380952
-## 2:     0   7 0.3333333
-## 3:     1   7 0.3333333
-## 4:     2   2 0.0952381
+## 1:    -2   4 0.1904762
+## 2:    -1   9 0.4285714
+## 3:     0   4 0.1904762
+## 4:     1   4 0.1904762
 ## 
 ## $measures
-##       what    d1    d2    d3
-##  1:    Min 0.000 0.000 0.000
-##  2:    Q10 0.000 0.000 0.000
-##  3:    Q20 0.000 0.000 0.000
-##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 1.000 0.000 0.010
-##  6:   Mean 0.762 0.024 0.045
-##  7: Median 1.000 0.001 0.015
-##  8:    Q60 1.000 0.001 0.017
-##  9:    Q70 1.000 0.002 0.024
-## 10:    Q80 1.000 0.005 0.048
-## 11:    Q90 1.000 0.143 0.183
-## 12:    Q95 2.000 0.154 0.213
-## 13:    Q99 2.000 0.164 0.274
-## 14:    Max 2.000 0.167 0.289
+##       what d1    d2    d3
+##  1:    Min  0 0.000 0.000
+##  2:    Q10  0 0.000 0.000
+##  3:    Q20  1 0.001 0.011
+##  4:    Q30  1 0.001 0.017
+##  5:    Q40  1 0.002 0.021
+##  6:   Mean  1 0.036 0.061
+##  7: Median  1 0.002 0.024
+##  8:    Q60  1 0.004 0.033
+##  9:    Q70  1 0.005 0.039
+## 10:    Q80  1 0.012 0.054
+## 11:    Q90  2 0.077 0.136
+## 12:    Q95  2 0.286 0.354
+## 13:    Q99  2 0.324 0.374
+## 14:    Max  2 0.333 0.379
 ## 
 ## $cumdistr_d1
 ##    cat cnt       pct
-## 1:   0   7 0.3333333
-## 2:   1  19 0.9047619
+## 1:   0   4 0.1904762
+## 2:   1  17 0.8095238
 ## 3:   2  21 1.0000000
 ## 
 ## $cumdistr_d2
 ##            cat cnt       pct
 ## 1:    [0,0.02]  18 0.8571429
 ## 2: (0.02,0.05]  18 0.8571429
-## 3:  (0.05,0.1]  18 0.8571429
-## 4:   (0.1,0.2]  21 1.0000000
-## 5:   (0.2,0.3]  21 1.0000000
+## 3:  (0.05,0.1]  19 0.9047619
+## 4:   (0.1,0.2]  19 0.9047619
+## 5:   (0.2,0.3]  20 0.9523810
 ## 6:   (0.3,0.4]  21 1.0000000
 ## 7:   (0.4,0.5]  21 1.0000000
 ## 8:   (0.5,Inf]  21 1.0000000
 ## 
 ## $cumdistr_d3
 ##            cat cnt       pct
-## 1:    [0,0.02]  13 0.6190476
-## 2: (0.02,0.05]  17 0.8095238
+## 1:    [0,0.02]   7 0.3333333
+## 2: (0.02,0.05]  16 0.7619048
 ## 3:  (0.05,0.1]  18 0.8571429
 ## 4:   (0.1,0.2]  19 0.9047619
-## 5:   (0.2,0.3]  21 1.0000000
+## 5:   (0.2,0.3]  19 0.9047619
 ## 6:   (0.3,0.4]  21 1.0000000
 ## 7:   (0.4,0.5]  21 1.0000000
 ## 8:   (0.5,Inf]  21 1.0000000
@@ -1076,27 +1069,27 @@ already perturbed variables as shown below:</p>
 ## └──────────────────────────────────────────────┘
 ## ── Distribution statistics of perturbations ────────────────────────────────────
 ##          countvar Min Q10 Q20 Q30 Q40   Mean Median Q60 Q70 Q80 Q90 Q95 Q99 Max
-## 1:          total  -2  -1  -1  -1  -1 -0.286      0   0   0   1   1   1 1.0   1
-## 2: cnt_highincome  -3  -1   0   0   0  0.143      0   0   0   0   2   3 3.8   4
+## 1:          total  -1  -1   0   0   1  0.619      1   1   1   1   2   2 2.0   2
+## 2: cnt_highincome  -4  -2  -1   0   0 -0.476      0   0   0   0   0   1 1.8   2
 ## 
 ## ── Distance-based measures ─────────────────────────────────────────────────────
 ## ✔ Variable: &#39;total&#39;
 ## 
-##       what    d1    d2    d3
-##  1:    Min 0.000 0.000 0.000
-##  2:    Q10 0.000 0.000 0.000
-##  3:    Q20 0.000 0.000 0.000
-##  4:    Q30 0.000 0.000 0.000
-##  5:    Q40 1.000 0.000 0.010
-##  6:   Mean 0.762 0.024 0.045
-##  7: Median 1.000 0.001 0.015
-##  8:    Q60 1.000 0.001 0.017
-##  9:    Q70 1.000 0.002 0.024
-## 10:    Q80 1.000 0.005 0.048
-## 11:    Q90 1.000 0.143 0.183
-## 12:    Q95 2.000 0.154 0.213
-## 13:    Q99 2.000 0.164 0.274
-## 14:    Max 2.000 0.167 0.289
+##       what d1    d2    d3
+##  1:    Min  0 0.000 0.000
+##  2:    Q10  0 0.000 0.000
+##  3:    Q20  1 0.001 0.011
+##  4:    Q30  1 0.001 0.017
+##  5:    Q40  1 0.002 0.021
+##  6:   Mean  1 0.036 0.061
+##  7: Median  1 0.002 0.024
+##  8:    Q60  1 0.004 0.033
+##  9:    Q70  1 0.005 0.039
+## 10:    Q80  1 0.012 0.054
+## 11:    Q90  2 0.077 0.136
+## 12:    Q95  2 0.286 0.354
+## 13:    Q99  2 0.324 0.374
+## 14:    Max  2 0.333 0.379
 ## 
 ## ✔ Variable: &#39;cnt_highincome&#39;
 ## 
@@ -1106,29 +1099,26 @@ already perturbed variables as shown below:</p>
 ##  3:    Q20 0.000 0.000 0.000
 ##  4:    Q30 0.000 0.000 0.000
 ##  5:    Q40 0.000 0.000 0.000
-##  6:   Mean 0.944 0.028 0.073
+##  6:   Mean 0.889 0.044 0.094
 ##  7: Median 0.000 0.000 0.000
-##  8:    Q60 1.000 0.006 0.048
-##  9:    Q70 1.000 0.011 0.053
-## 10:    Q80 2.000 0.056 0.160
-## 11:    Q90 3.000 0.102 0.264
-## 12:    Q95 3.150 0.137 0.277
-## 13:    Q99 3.830 0.154 0.321
-## 14:    Max 4.000 0.158 0.332
+##  8:    Q60 1.000 0.005 0.034
+##  9:    Q70 1.000 0.008 0.044
+## 10:    Q80 1.600 0.020 0.089
+## 11:    Q90 2.600 0.070 0.218
+## 12:    Q95 4.000 0.169 0.409
+## 13:    Q99 4.000 0.491 0.813
+## 14:    Max 4.000 0.571 0.914
 ## 
 ## ┌──────────────────────────────────────────────────┐
 ## │Utility measures for perturbed numerical variables│
 ## └──────────────────────────────────────────────────┘
 ## ── Distribution statistics of perturbations ────────────────────────────────────
-##      vname         Min        Q10        Q20        Q30       Q40      Mean
-## 1:  income -130489.209 -92054.182 -30236.471 -19783.823 -12031.94 -2068.528
-## 2: savings   -8180.028  -5377.784  -3332.478  -1557.465   -207.13   617.254
-##       Median       Q60       Q70       Q80       Q90       Q95       Q99
-## 1: 18455.682 24710.086 31235.785 48144.774 49622.849 54207.067 76218.571
-## 2:   -61.752  2111.192  2792.006  3962.805  6294.981  6391.223  8959.746
-##          Max
-## 1: 81721.448
-## 2:  9601.877</code></pre>
+##      vname        Min        Q10        Q20       Q30       Q40     Mean
+## 1:  income -54948.444 -50955.387 -19701.997 -7497.201 -2301.278 7298.369
+## 2: savings  -4222.866  -3657.058  -2218.832 -1713.877 -1151.083  395.384
+##      Median      Q60       Q70       Q80       Q90       Q95      Q99      Max
+## 1:  -50.946 9002.470 26332.543 33993.191 54119.893 70859.684 90331.86 95199.90
+## 2: -794.003  292.108  1222.471  1439.096  5873.957  8659.747 10367.12 10793.97</code></pre>
 </div>
 </div>
 <div id="summary" class="section level2">
