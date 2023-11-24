@@ -1,9 +1,9 @@
 Package: cellKey
 Type: Package
-Date: 2023-03-13
+Date: 2023-11-24
 Title: Consistent Perturbation of Statistical Frequency- And Magnitude
         Tables
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: c(
   person(
     given="Bernhard", family="Meindl", 
@@ -37,6 +37,6 @@ LazyData: true
 LazyDataCompression: xz
 BugReports: https://github.com/sdcTools/userSupport/issues
 URL: https://github.com/sdcTools/cellKey
-Packaged: 2023-03-14 10:12:55 UTC; meindl
+Packaged: 2023-11-24 10:21:17 UTC; meindl
 Repository: CRAN
-Date/Publication: 2023-03-17 11:40:02 UTC
+Date/Publication: 2023-11-24 11:10:02 UTC

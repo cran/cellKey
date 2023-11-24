@@ -1,5 +1,10 @@
+# cellKey 1.0.2
+- Performance Fix: Do not compute contributing indices (relevant only for the perturbation of numerical variables) if no such variables were specified in `ck_setup()`
+- Prefix logging-Outputs with a timestamp
+
 # cellKey 1.0.1
 - Updated Unit-Tests to be compatible with CRAN checks for MacOs
+- Update References in Package Vignette
 
 # cellKey 1.0.0
 - first version on CRAN
