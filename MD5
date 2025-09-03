@@ -1,8 +1,8 @@
-ae3e4b5039f5285df3159ed619f14062 *DESCRIPTION
+6b8d8337fe4f0f2f35f382f7ab7c211b *DESCRIPTION
 f0a51678f4a5935366bd83a7106d37bb *NAMESPACE
-d3500d764d1b619f6f63df1591aef0ae *NEWS.md
+ac18bfa4f4641a00968e83c19269fc95 *NEWS.md
 8a051f030d517d9885677d1758e3d8e8 *R/0_imports.R
-6db4c9b9d032f8ef4ad623cfee941e9f *R/cellkey_pkg.R
+d373511156957ae54ce4adf8f8e2d6ad *R/cellkey_pkg.R
 005fd42768788e64879c6458d51960d7 *R/ck_cnt_measures.R
 372365214d45d3e96f9bbb25aa56d3b1 *R/ck_create_seed_from_hash.R
 867dd1a4811c3412fd06745ccd3c5fc8 *R/ck_create_testdata.R
@@ -20,8 +20,8 @@ df7fe1f2c8e8d48f49b321a7bc257bd9 *R/utils_yaml.R
 c125055aba67968a8666cf089b25de49 *build/vignette.rds
 90383ffd1b090c3c241309a662f7f4ad *data/ck_dat_hc92.rda
 aa521ef4c14418cbceba00cb64d387c0 *data/testdata.rdata
-37730af3b4c380be52040cfb95756b45 *inst/doc/introduction.Rmd
-e0586d58ba506c8aef85ccd003b96461 *inst/doc/introduction.html
+cfed31fd71930aa4d2128090a7205c30 *inst/doc/introduction.Rmd
+77192f475588732776d84556f6430f62 *inst/doc/introduction.html
 0f8ee591a918090724121ba0fd5b87db *man/cellkey_pkg.Rd
 09c93742561bf54775428016bae79d88 *man/ck_cnt_measures.Rd
 87a755d6f164427536a3e7f1e5ca118e *man/ck_create_testdata.Rd
@@ -41,6 +41,6 @@ e2b675d1bc6eab03767c4ad457e0d4bb *tests/testthat/test_countvars.R
 00874abd8695618df84c0697f4178465 *tests/testthat/test_numvars.R
 84fc8dc8d775fb5231ed318be203c316 *tests/testthat/test_params_cnts.R
 166ee78f6b5854052414a1895d576b94 *tests/testthat/test_params_nums.R
-37730af3b4c380be52040cfb95756b45 *vignettes/introduction.Rmd
-eebfb4014601e9e1dbd21ae80865dfd1 *vignettes/introduction.Rmd.orig
+cfed31fd71930aa4d2128090a7205c30 *vignettes/introduction.Rmd
+69e569567c681810f11c373b4c9b39fa *vignettes/introduction.Rmd.orig
 65e1c8a0069b90a00a3b1b3d5f5a10a2 *vignettes/precompile.R
